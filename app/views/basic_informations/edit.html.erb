@@ -1,0 +1,424 @@
+<%= render "buildings/logo" %>
+
+<div class="tabWidget">
+	 <ul class="tabBar">	 		
+      <li class="tabItem"> <%=link_to "Introduction", {:action => :index, :controller=> :buildings}, :style=>'text-decoration: none;' %></li>
+      <li class="currentTabItem">Common Inputs</li>
+      <li class="tabItem"> <%=link_to "Benchmarking", {:action => :edit, :controller=> :benchmarkings}, :style=>'text-decoration: none;' %></li>
+      <li class="disabledTabItem">No- or Low-Cost Improvement</li>
+      <li class="tabItem"><%=link_to "Preliminary Retrofit Analysis", {:action => :edit, :controller=> :preliminary_retrofits }, :style=>'text-decoration: none;' %></li>
+      <li class="disabledTabItem">Detailed Retrofit Analysis</li>
+    </ul>    
+    
+	<div class="pageWidget">		
+		<%# Account management table %>
+		<div style="padding: 10px; border: thin solid #000000;"> 
+			<table>
+				<tr>
+					<td style="font-size: large; font-weight: bold;" width="200">New Analysis</td>
+					<td>
+						<%= form_tag(:controller=> :buildings, :action => :new, :method => :post) do -%>
+						<%= submit_tag("New Analysis", {:style => "width: 290px;height: 30px;" } ) %> 
+						<% end -%> 
+					</td>
+				</tr>
+				<tr>
+					<td style="font-size: large; font-weight: bold" width="200">Previous Analysis</td>
+					<td width>
+						<%= form_tag(:controller=> :buildings, :action => :edit, :method => :post) do -%>
+						<%= label_tag(:preSessionNo, "Session #:") %>
+						<%= text_field_tag(:preSessionNo) %>
+						<%= submit_tag("Continue",  {:style => "height: 30px;" } )%> 
+						<% end -%> 
+					</td>
+				</tr>
+			</table>
+		</div>	
+		<br/>
+		
+		<% if @basic_information == nil %>
+			<p>Please start a new analysis or continue your perviuos analysis. </p> 
+		<% else %>		
+			<table>
+				<tr>
+					<td valign="top">												
+						<%# Basic Information%>
+						<div style="padding: 0px 10px 0px 10px; border: thin solid #000000;">			
+						<%= form_tag(:controller=> :basic_informations, :action => :update, :method => :post) do -%>
+						  	
+						  	<% if @basic_information.errors.any? %>
+						    <div id="error_explanation">
+						      <h2><%= pluralize(@basic_information.errors.count, "error") %> prohibited the basic information update:</h2>			
+						      <ul>
+						      <% @basic_information.errors.full_messages.each do |msg| %>
+						        <li><%= msg %></li>
+						      <% end %>
+						      </ul>
+						    </div>
+						  <% end %>
+						
+						<table>  <%# Overall Table%>
+						<tr>
+							<td> <%# td for Basic information table  @basic_information.buildingTypeID %>
+								<p style="font-size: large; font-weight: bold ">Basic information</p>
+								<table> <%# Basic information table %>
+									<tr>
+										<td><%= label_tag(nil, "Building type") %>	</td>
+										<td><%= select_tag(:buildingTypeID, options_for_select([["Office - small 1 story",1],["Office - medium 3 stories", 3],["Retail - medium",5]], @basic_information.buildingTypeID), {:style => "width: 180px;" }) 
+										#, ["Office - medium 2 stories",2],["Retail - small",4],["Mixed use - 2 stories",6],["Mixed use - 3 stories",7] 
+										%> </td>
+									</tr>  	
+									<tr>
+										<td><%= label_tag(nil, "Year built") %></td>
+										<td><%= text_field_tag(:yearBuilt, @basic_information.yearBuilt, {:style => "width: 175px;" })%> </td>
+									</tr>
+									<tr>
+										<td><%= label_tag(nil, "California Zip code") %></td>
+										<td><%= text_field_tag(:zipcode,@basic_information.zipcode, {:style => "width: 175px;" })%> </td>
+									</tr>
+									<tr>
+										<td><%= label_tag(nil, "Gross floor area (square feet)") %></td>
+										<td><%= text_field_tag(:grossFloorArea,@basic_information.grossFloorArea, {:style => "width: 175px;" })%> </td>
+									</tr>
+									<tr>
+										<td><%= label_tag(nil, "*Retail floor area percentage (%)") %></td>
+										<td><%= text_field_tag(:retailFloorAreaPercentage, @basic_information.retailFloorAreaPercentage, {:style => "width: 175px;" })%></td>
+									</tr>										
+								</table> <%# Basic information table %>
+                                <p>*Only required for mixed use buildings.</p>
+							</td> <%# td for Basic information table %>
+						</tr>
+						<tr>
+							<td><%# td for submit button %>
+								<%= submit_tag "Update Common Inputs", {:style => "width: 200px; height: 40px;"} %>
+								<br />
+							</td><%# td for submit button %>
+						</tr>
+						</table> <%# Overall Table%>
+						<% end -%> 
+						
+						</div>
+									
+						<br />			
+						<%# Flat Utility Rate%>
+						<div style="padding: 0px 10px 0px 10px; border: thin solid #000000;">			
+						<%= form_tag(:controller=> :basic_informations, :action => :updateFlatUtilityRate, :method => :post) do -%>
+						  	
+						  	<% if @flat_utility_rate.errors.any? %>
+						    <div id="error_explanation">
+						      <h2><%= pluralize(@flat_utility_rate.errors.count, "error") %> prohibited the energy price update:</h2>			
+						      <ul>
+						      <% @flat_utility_rate.errors.full_messages.each do |msg| %>
+						        <li><%= msg %></li>
+						      <% end %>
+						      </ul>
+						    </div>
+						  <% end %>
+						
+						<table>  <%# Overall Table%>
+							<tr>
+								<td> <%# td for Basic information table  @basic_information.buildingTypeID %>
+									<p style="font-size: large; font-weight: bold ">Energy price</p>
+									<table> <%# Basic information table %>
+										<tr>
+											<td><%= label_tag(nil, "Electricity ($/kWh)") %>	</td>
+											<td><%= text_field_tag(:electricityUsageCharge, @flat_utility_rate.electricityUsageCharge, {:style => "width: 180px;" }) %> </td>
+										</tr>  	
+										<tr>
+											<td><%= label_tag(nil, "Natural gas ($/therm)") %>	</td>
+											<td><%= text_field_tag(:naturalGasUsageCharge, @flat_utility_rate.naturalGasUsageCharge, {:style => "width: 180px;" }) %> </td>
+										</tr> 
+										<tr>
+											<td><%= label_tag(nil, "Electricity demand ($/kW)") %>	</td>
+											<td><%= text_field_tag(:electricityDemandCharge, @flat_utility_rate.electricityDemandCharge, {:style => "width: 180px;" }) %> </td>
+										</tr> 
+									</table> <%# Basic information table %>
+								</td> <%# td for Basic information table %>
+							</tr>
+							<tr>
+								<td><%# td for submit button %>
+									<br />
+									<%= submit_tag "Update Energy Price", {:style => "width: 200px; height: 40px;"} %>
+									<br />
+								</td><%# td for submit button %>
+							</tr>
+						</table> <%# Overall Table%>
+						<% end -%> 
+						
+						</div>
+						
+						<br />
+						<%# CO2 Emission%>
+						<div style="padding: 0px 10px 0px 10px; border: thin solid #000000;">			
+						<%= form_tag(:controller=> :basic_informations, :action => :updateEmission, :method => :post) do -%>
+						  	
+						  	<% if @emission.errors.any? %>
+						    <div id="error_explanation">
+						      <h2><%= pluralize(@emission.errors.count, "error") %> prohibited the CO2 emission factor update:</h2>			
+						      <ul>
+						      <% @emission.errors.full_messages.each do |msg| %>
+						        <li><%= msg %></li>
+						      <% end %>
+						      </ul>
+						    </div>
+						  <% end %>
+						
+						<table>  <%# Overall Table%>
+							<tr>
+								<td> <%# td for Basic information table  @basic_information.buildingTypeID %>
+									<p style="font-size: large; font-weight: bold ">CO2 emission factor</p>
+									<table> <%# Basic information table %>
+										<tr>
+											<td><%= label_tag(nil, "Electricity (lb/MWh)") %>	</td>
+											<td><%= text_field_tag(:electricityEmissionRate, @emission.electricityEmissionRate, {:style => "width: 180px;" }) %> </td>
+										</tr>  	
+										<tr>
+											<td><%= label_tag(nil, "Natural gas (lb/MWh)") %>	</td>
+											<td><%= text_field_tag(:naturalGasEmissionRate, @emission.naturalGasEmissionRate, {:style => "width: 180px;" }) %> </td>
+										</tr> 
+									</table> <%# Basic information table %>
+								</td> <%# td for Basic information table %>
+							</tr>
+							<tr>
+								<td><%# td for submit button %>
+									<br />
+									<%= submit_tag "Update CO2 Emission Factor", {:style => "width: 200px; height: 40px;"} %>
+									<br />
+								</td><%# td for submit button %>
+							</tr>
+						</table> <%# Overall Table%>
+						<% end -%> 
+						
+						</div>
+			
+					</td>
+					<td width="10"></td>
+					<td valign="top">
+						<%# Energy Usage%>	
+						<div style="padding: 0px 10px 0px 10px; border: thin solid #000000;">
+						<p style="font-size: large; font-weight: bold">Energy Data</p>						
+						
+						<%# Smart Meter Data%>
+						<%= form_tag({:controller=> :basic_informations, :action => :updateSmartMeter, :method => :post},{:multipart=>true} ) do -%>						  	
+						  	<% if @smart_meter.errors.any? %>
+						    <div id="error_explanation">
+						      <h2><%= pluralize(@smart_meter.errors.count, "error") %> prohibited the smart meter data update:</h2>			
+						      <ul>
+						      <% @smart_meter.errors.full_messages.each do |msg| %>
+						        <li><%= msg %></li>
+						      <% end %>
+						      </ul>
+						    </div>
+						  <% end %>						
+						<table>
+							<tr>	
+								<td>		    
+								   <p style="font-size: medium; font-weight: bold">Smart meter data</p>
+								   <table align="left">						    
+									   	<tr>
+										    <th width="120" align="left">Service Type</th>
+										    <th width="100" align="center">Uploaded</th>
+										    <th align="left">Select a new XML file</th>
+										</tr>
+									   <tr>
+										    <td align="left">Electricity</td>										    
+										    <td align="center">
+										     	<% if @smart_meter.hasElectricityFile==nil or not @smart_meter.hasElectricityFile %>     	
+										     	<%= "No" %>  	    
+										     	<% else %>
+										     	<%= "Yes" %>
+										     	<% end %>	 
+										    </td>
+										    <td align="left">
+										    	<%= file_field "electricity_green_button",'xml_file'  %>
+										    </td>										    
+									    </tr>									   
+									    <tr>		
+										    <td align="left">Natural Gas</td>
+										    <td align="center">										     	
+										    	<% if @smart_meter.hasNaturalgasFile==nil or not @smart_meter.hasNaturalgasFile %>     	
+										     	<%= "No" %>  	    
+										     	<% else %>
+										     	<%= "Yes" %>
+										     	<% end %>	 
+										    </td>
+										    <td align="left">	
+										    	<%= file_field "natural_gas_green_button",'xml_file'  %>		
+										    </td>										    
+									    </tr>
+								    </table>	
+							    </td>		
+						    </tr>				
+					    	<tr>
+								<td><%# td for submit button %>
+									<br />
+									<%= submit_tag "Update Green Button Data", {:disabled =>false,:style => "width: 200px; height: 40px;" }%>
+									<br />
+								</td><%# td for submit button %>
+							</tr>
+						</table> <%# Overall Table%>
+						<% end -%> 					    
+					    <p>The monthly energy data will be updated based on the smart meter data.</p>	
+					    <p>Or, if smart meter data NOT available, input monthly energy usage data.</p>							
+						<%# Monthly Energy Data%>			
+						<%= form_tag(:controller=> :basic_informations, :action => :updateEnergyUsage, :method => :post) do -%>						  	
+						  	<% if @energy_usage.errors.any? %>
+						    <div id="error_explanation">
+						      <h2><%= pluralize(@energy_usage.errors.count, "error") %> prohibited the monthly energy data update:</h2>			
+						      <ul>
+						      <% @energy_usage.errors.full_messages.each do |msg| %>
+						        <li><%= msg %></li>
+						      <% end %>
+						      </ul>
+						    </div>
+						  <% end %>
+						
+						<table>  <%# Overall Table%>
+							<tr>
+								<td> <%# td for energy consumption data %>
+										<p style="font-size: medium; font-weight: bold">Monthly energy data</p>
+										
+										<table>
+										    <tr>
+										    	<td><%= label_tag(nil, "First data Year") %></td>
+										    	<td><%= text_field_tag(:meter1stBillYear,@energy_usage.meter1stBillYear,{:style => "width: 50px;" })%> </td>
+										    	<td><%= label_tag(nil, "Month") %></td>
+										    	<td align="center"><%= text_field_tag(:meter1stBillMonth,@energy_usage.meter1stBillMonth,{:style => "width: 50px;" })%> </td>
+										    </tr> 
+										</table>
+										<table cellpadding="1">
+											<tr>
+												<th width="80">Month</th>
+												<th width="200">Electricity Usage (kWh)</th>
+												<th width="200">Natural Gas Usage (Therm)</th>	
+											</tr>	    
+											<tr>
+											    <td align="center"><%= label_tag(nil, "1") %></td>
+											    <td align="center"><%= text_field_tag(:electricityUsageMonthly_1, @energy_usage.electricityUsageMonthly_1)%> </td>
+											    <td align="center"><%= text_field_tag(:naturalGasUsageMonthly_1, @energy_usage.naturalGasUsageMonthly_1)%> </td>
+											</tr>    
+											<tr>
+											    <td align="center"><%= label_tag(nil, "2") %></td>
+											    <td align="center"><%= text_field_tag(:electricityUsageMonthly_2, @energy_usage.electricityUsageMonthly_2)%> </td>
+											    <td align="center"><%= text_field_tag(:naturalGasUsageMonthly_2, @energy_usage.naturalGasUsageMonthly_2)%> </td>
+											</tr>    
+											<tr>
+											    <td align="center"><%= label_tag(nil, "3") %></td>
+											    <td align="center"><%= text_field_tag(:electricityUsageMonthly_3, @energy_usage.electricityUsageMonthly_3)%> </td>
+											    <td align="center"><%= text_field_tag(:naturalGasUsageMonthly_3, @energy_usage.naturalGasUsageMonthly_3)%> </td>
+											</tr>    
+											<tr>
+											    <td align="center"><%= label_tag(nil, "4") %></td>
+											    <td align="center"><%= text_field_tag(:electricityUsageMonthly_4, @energy_usage.electricityUsageMonthly_4)%> </td>
+											    <td align="center"><%= text_field_tag(:naturalGasUsageMonthly_4, @energy_usage.naturalGasUsageMonthly_4)%> </td>
+											</tr>    
+											<tr>
+											    <td align="center"><%= label_tag(nil, "5") %></td>
+											    <td align="center"><%= text_field_tag(:electricityUsageMonthly_5, @energy_usage.electricityUsageMonthly_5)%> </td>
+											    <td align="center"><%= text_field_tag(:naturalGasUsageMonthly_5, @energy_usage.naturalGasUsageMonthly_5)%> </td>
+											</tr>    
+											<tr>
+											    <td align="center"><%= label_tag(nil, "6") %></td>
+											    <td align="center"><%= text_field_tag(:electricityUsageMonthly_6, @energy_usage.electricityUsageMonthly_6)%> </td>
+											    <td align="center"><%= text_field_tag(:naturalGasUsageMonthly_6, @energy_usage.naturalGasUsageMonthly_6)%> </td>
+											</tr>    
+											<tr>
+											    <td align="center"><%= label_tag(nil, "7") %></td>
+											    <td align="center"><%= text_field_tag(:electricityUsageMonthly_7, @energy_usage.electricityUsageMonthly_7)%> </td>
+											    <td align="center"><%= text_field_tag(:naturalGasUsageMonthly_7, @energy_usage.naturalGasUsageMonthly_7)%> </td>
+											</tr>    
+											<tr>
+											    <td align="center"><%= label_tag(nil, "8") %></td>
+											    <td align="center"><%= text_field_tag(:electricityUsageMonthly_8, @energy_usage.electricityUsageMonthly_8)%> </td>
+											    <td align="center"><%= text_field_tag(:naturalGasUsageMonthly_8, @energy_usage.naturalGasUsageMonthly_8)%> </td>
+											</tr>    
+											<tr>
+											    <td align="center"><%= label_tag(nil, "9") %></td>
+											    <td align="center"><%= text_field_tag(:electricityUsageMonthly_9, @energy_usage.electricityUsageMonthly_9)%> </td>
+											    <td align="center"><%= text_field_tag(:naturalGasUsageMonthly_9, @energy_usage.naturalGasUsageMonthly_9)%> </td>
+											</tr>    
+											<tr>
+											    <td align="center"><%= label_tag(nil, "10") %></td>
+											    <td align="center"><%= text_field_tag(:electricityUsageMonthly_10, @energy_usage.electricityUsageMonthly_10)%> </td>
+											    <td align="center"><%= text_field_tag(:naturalGasUsageMonthly_10, @energy_usage.naturalGasUsageMonthly_10)%> </td>
+											</tr>    
+											<tr>
+											    <td align="center"><%= label_tag(nil, "11") %></td>
+											    <td align="center"><%= text_field_tag(:electricityUsageMonthly_11, @energy_usage.electricityUsageMonthly_11)%> </td>
+											    <td align="center"><%= text_field_tag(:naturalGasUsageMonthly_11, @energy_usage.naturalGasUsageMonthly_11)%> </td>
+											</tr>     
+											<tr>
+											    <td align="center"><%= label_tag(nil, "12") %></td>
+											    <td align="center"><%= text_field_tag(:electricityUsageMonthly_12, @energy_usage.electricityUsageMonthly_12)%> </td>
+											    <td align="center"><%= text_field_tag(:naturalGasUsageMonthly_12, @energy_usage.naturalGasUsageMonthly_12)%> </td>
+											</tr> 			
+										</table>
+								</td> <%# td for energy consumption data %>
+							</tr>
+							<tr>
+								<td><%# td for submit button %>
+									<br />
+									<%= submit_tag "Update Energy Usage", {:style => "width: 200px; height: 40px;"} %>
+									<br />
+								</td><%# td for submit button %>
+							</tr>
+						</table> <%# Overall Table%>
+						<% end -%> 
+						
+						</div>
+
+                        <br />
+                        <%# Investment Criteria %>
+						<div style="padding: 0px 10px 0px 10px; border: thin solid #000000;">			
+						<%= form_tag(:controller=> :basic_informations, :action => :updateInvestment, :method => :post) do -%>
+						  	
+						  	<% if @investment.errors.any? %>
+						    <div id="error_explanation">
+						      <h2><%= pluralize(@investment.errors.count, "error") %> prohibited the investment criteria update:</h2>			
+						      <ul>
+						      <% @investment.errors.full_messages.each do |msg| %>
+						        <li><%= msg %></li>
+						      <% end %>
+						      </ul>
+						    </div>
+						  <% end %>
+						
+						<table>  <%# Overall Table%>
+							<tr>
+								<td> <%# td for Basic information table  @basic_information.buildingTypeID %>
+									<p style="font-size: large; font-weight: bold ">Investment criteria</p>
+									<table> <%# Basic information table %>
+										<tr>
+											<td><%= label_tag(nil, "Maximum budget ($)") %>	</td>
+											<td><%= text_field_tag(:maxBudget, @investment.maxBudget, {:style => "width: 280px;" }) %> </td>
+										</tr>  	
+										<tr>
+											<td><%= label_tag(nil, "Maximum payback year (year)") %>	</td>
+											<td><%= text_field_tag(:maxPaybackYear, @investment.maxPaybackYear, {:style => "width: 280px;" }) %> </td>
+										</tr> 
+										<tr>
+											<td><%= label_tag(nil, "Priority for measure selection") %>	</td>
+											<td><%= select_tag(:priorityID, options_for_select([["Maximizing energy cost saving",1], ["Maximizing energy saving",2],["Minimizing CO2 emissions", 3],["Minimizing investment cost",4],["Minimizing payback period",5]], @investment.priorityID), {:style => "width: 280px;" }) %> </td>
+										</tr>  	
+									</table> <%# Basic information table %>
+								</td> <%# td for Basic information table %>
+							</tr>
+							<tr>
+								<td><%# td for submit button %>
+									<br />
+									<%= submit_tag "Update Investment Criteria", {:style => "width: 200px; height: 40px;"} %>
+									<br />
+								</td><%# td for submit button %>
+							</tr>
+						</table> <%# Overall Table%>
+						<% end -%> 
+						
+						</div>
+						
+					</td>
+				</tr>				
+			</table>
+			
+		<% end %>
+	</div>
+</div>

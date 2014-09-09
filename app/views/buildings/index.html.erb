@@ -1,0 +1,54 @@
+<%= render "buildings/logo" %>
+	
+<div class="tabWidget">
+	 <ul class="tabBar">	 		
+      <li class="currentTabItem"> <a>Introduction</a></li>
+      <li class="tabItem"> <%=link_to "Common Inputs", {:action => :edit, :controller=> :basic_informations}, :style=>'text-decoration: none;'%></li>
+      <li class="tabItem"> <%=link_to "Benchmarking", {:action => :edit, :controller=> :benchmarkings}, :style=>'text-decoration: none;' %></li>
+      <li class="disabledTabItem"> <a>No- or Low-Cost Improvement</a></li>
+      <li class="tabItem"> <a><%=link_to "Preliminary Retrofit Analysis", {:action => :edit, :controller=> :preliminary_retrofits }, :style=>'text-decoration: none;' %></a></li>
+      <li class="disabledTabItem"> <a>Detailed Retrofit Analysis</a></li>
+    </ul>
+	<div class="pageWidget">
+		<div style="padding: 0px 10px 0px 10px; border: thin solid #000000;">
+			<p style="font-size: large; font-weight: bold">Benchmarking</p>
+			<p>Benchmark the building using ENERGY STAR Portfolio Manager API and EnergyIQ API 
+			<br/><br/>Required inputs: basic building information in Common Inputs
+			<br/><br/>Target audience: For all types of users</p>
+		</div>
+		<br/>
+		
+		<div style="padding: 0px 10px 0px 10px; border: thin solid #000000;">
+			<p style="font-size: large; font-weight: bold">No - or Low-Cost Improvement</p>
+			<p>Level 1 identifies no- or low-cost operational improvements from load shape analysis using electricity and gas data
+			<br/><br/>Required inputs: Energy data, basic building information in Common Inputs, and outdoor air temperature, operation schedule
+			<br/><br/>Target audience: For all types of users</p>
+		</div>
+	
+		<br/>
+		<div style="padding: 0px 10px 0px 10px; border: thin solid #000000;">
+			<p style="font-size: large; font-weight: bold">Preliminary Retrofit Analysis</p>
+			<p>Level 2 provides quick retrofit recommendations by looking up a pre-simulated 
+			    database.<br />
+			    <br />
+			    Required inputs: Bldg type, zip code, gross floor area, vintage, utility rates, 
+			    and<br />
+			    building system upgrade information<br />
+			    <br />
+			    Target audience: For all types of users </p>
+		</div>
+		
+		<br/>
+		<div style="padding: 0px 10px 0px 10px; border: thin solid #000000;">
+			<p style="font-size: large; font-weight: bold">Detailed Retrofit Analysis</p>
+			<p>Level 3 provides user configurable retrofit analysis using real-time EnergyPlus 
+			    simulations.<br />
+			    <br />
+			    Required inputs: Actual building characteristics, time of use energy rate, user 
+			    defined retrofit measures<br />
+			    <br />
+			    Target audience: Facility managers, engineers, and building owners with 
+			    experience </p>
+		</div>    	
+    </div>    
+  </div>

@@ -1,0 +1,31 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  basicInformation_id: 1
+  officeWeeklyOperationHours: 1.5
+  officeNumberOfComputers: 1.5
+  officeNumberOfWorkers: 1.5
+  retailWeeklyOperationHours: 1.5
+  retailNumberOfComputers: 1.5
+  retailNumberOfWorkers: 1.5
+  electricityUsage: 1.5
+  naturalGasUsage: 1.5
+  meter1stBillDate: 2014-04-02
+  energyStarScore: 1.5
+  energyIQCount: 1
+  energyIQDescription: MyText
+
+two:
+  basicInformation_id: 1
+  officeWeeklyOperationHours: 1.5
+  officeNumberOfComputers: 1.5
+  officeNumberOfWorkers: 1.5
+  retailWeeklyOperationHours: 1.5
+  retailNumberOfComputers: 1.5
+  retailNumberOfWorkers: 1.5
+  electricityUsage: 1.5
+  naturalGasUsage: 1.5
+  meter1stBillDate: 2014-04-02
+  energyStarScore: 1.5
+  energyIQCount: 1
+  energyIQDescription: MyText

@@ -1,0 +1,19 @@
+<table style="width: 98%;" align="center">
+<tr>
+    <td style="font-size: xx-large; font-weight: bold; font-family: 'Arial Black';" 
+        align="left">Commercial Building Energy Saver</td>
+    <% if session[:bldg_id]== nil %>
+    	<td>No session number</td>
+    <% elsif Building.where(:session_number=>session['bldg_id']).first==nil %>
+    	<td>Can't find a record for session number <%= session[:bldg_id] %>. Please check your session number.</td>
+    <%else %>
+    	<td>Welcome! Your session number is <%= session[:bldg_id] %>.</td>
+    <% end %>
+    <td align="right">
+    	<%=Building.count%> users
+    	<img alt="" src="/images/lbnl_logo.jpg" height="60" />
+    	<img alt="" src="/images/cec_logo.jpg" height="60" />
+    	<img alt="" src="/images/pier_logo.gif" height="60" />
+    </td>
+</tr>
+</table>

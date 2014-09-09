@@ -1,0 +1,2 @@
+class BenchmarkFreqDistributionsController < ApplicationController
+end

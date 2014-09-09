@@ -1,0 +1,2 @@
+module RetrofitResultsHelper
+end

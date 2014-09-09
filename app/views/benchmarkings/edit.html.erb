@@ -1,0 +1,188 @@
+<%= render "buildings/logo" %>
+
+<div class="tabWidget">
+	 <ul class="tabBar">	 		
+      <li class="tabItem"> <%=link_to "Introduction", {:action => :index, :controller=> :buildings}, :style=>'text-decoration: none;' %></li>
+      <li class="tabItem"> <%=link_to "Common Inputs", {:action => :edit, :controller=> :basic_informations}, :style=>'text-decoration: none;'%></li>
+      <li class="currentTabItem">Benchmark</li>
+      <li class="disabledTabItem">No- or Low-Cost Improvement</li>
+      <li class="tabItem"><%=link_to "Preliminary Retrofit Analysis", {:action => :edit, :controller=> :preliminary_retrofits }, :style=>'text-decoration: none;' %></li>
+      <li class="disabledTabItem">Detailed Retrofit Analysis</li>
+    </ul>    	
+	<div class="pageWidget">
+		<% if @benchmarking == nil %>
+			<p>Please go to Common Inputs page, and start a new analysis or continue your perviuos analysis.</p> 
+		<% else %> 	
+			<% buildingTypeID = @benchmarking.basic_information.buildingTypeID %>
+			
+			<% if not @benchmarking.basic_information.save or not @benchmarking.energy_usage.save %>  <%# The Overall-Benchmarking %>
+			<p>Please provide the Basic Informaiton and Monthly Energy Usage in Common Inputs page before Benchmarking!</p>
+			<% else %> <%# The Overall-Benchmarking %>						
+				
+				<%# The input section %>
+				<div style="padding: 0px 10px 0px 10px; border: thin solid #000000;">
+				<%= form_tag(:controller => :benchmarkings, :action => :update, :method => :post, :id=> @benchmarking.id) do -%> <%# Form tag %>
+					<% if @benchmarking.errors.any? %>
+				    <div id="error_explanation">
+				      <h2><%= pluralize(@benchmarking.errors.count, "error") %> prohibited the ENERGY STAR 
+                          Inputs update:</h2>
+				
+				      <ul>
+				      <% @benchmarking.errors.full_messages.each do |msg| %>
+				        <li><%= msg %></li>
+				      <% end %>
+				      </ul>
+				    </div>
+				  <% end %>
+				<table>
+					<tr>
+						<td width="400" align="left" style="border-width: 1px"><p style="font-size: large; font-weight: bold">ENERGY STAR Inputs</p></td>
+					</tr>
+					<tr>
+						<td align="left" valign="top" style="border-width: 1px">						
+							<table>
+								<% if buildingTypeID < 4 %> <%# Building type input %>
+									<tr>
+								    	<td><%= label_tag(nil, "Weekly operation hours:") %></td>
+								    	<td><%= text_field_tag(:officeWeeklyOperationHours,@benchmarking.officeWeeklyOperationHours)%> *Optional </td>
+								    </tr>  	
+								    
+								    <tr>
+								    	<td><%= label_tag(nil, "Number of computers:") %></td>
+								    	<td><%= text_field_tag(:officeNumberOfComputers,@benchmarking.officeNumberOfComputers)%> *Optional</td>
+								    </tr> 
+								    
+								    <tr>
+								    	<td><%= label_tag(nil, "Number of workers:") %></td>
+								    	<td><%= text_field_tag(:officeNumberOfWorkers,@benchmarking.officeNumberOfWorkers)%> *Optional</td>
+								    </tr> 	
+								<% elsif buildingTypeID < 6 %>	<%# Building type input %>
+									<tr>
+								    	<td><%= label_tag(nil, "Weekly operation hours:") %></td>
+								    	<td><%= text_field_tag(:retailWeeklyOperationHours,@benchmarking.retailWeeklyOperationHours)%> *Optional</td>
+								    </tr>  	
+								    
+								    <tr>
+								    	<td><%= label_tag(nil, "Number of computers:") %></td>
+								    	<td><%= text_field_tag(:retailNumberOfComputers,@benchmarking.retailNumberOfComputers)%> *Optional</td>
+								    </tr> 
+								    
+								    <tr>
+								    	<td><%= label_tag(nil, "Number of workers:") %></td>
+								    	<td><%= text_field_tag(:retailNumberOfWorkers,@benchmarking.retailNumberOfWorkers)%> *Optional</td>
+								    </tr> 	
+							    <% else %> <%# Building type input %>
+									<tr>
+								    	<td><%= label_tag(nil, "Office weekly operation hours:") %></td>
+								    	<td><%= text_field_tag(:officeWeeklyOperationHours,@benchmarking.officeWeeklyOperationHours)%> *Optional</td>
+								    </tr>  	
+								    
+								    <tr>
+								    	<td><%= label_tag(nil, "Office number of computers:") %></td>
+								    	<td><%= text_field_tag(:officeNumberOfComputers,@benchmarking.officeNumberOfComputers)%> *Optional</td>
+								    </tr> 
+								    
+								    <tr>
+								    	<td><%= label_tag(nil, "Office number of workers:") %></td>
+								    	<td><%= text_field_tag(:officeNumberOfWorkers,@benchmarking.officeNumberOfWorkers)%> *Optional</td>
+								    </tr> 	
+									<tr>
+								    	<td><%= label_tag(nil, "Retail weekly operation hours:") %></td>
+								    	<td><%= text_field_tag(:retailWeeklyOperationHours,@benchmarking.retailWeeklyOperationHours)%> *Optional</td>
+								    </tr>  	
+								    
+								    <tr>
+								    	<td><%= label_tag(nil, "Retail number of computers:") %></td>
+								    	<td><%= text_field_tag(:retailNumberOfComputers,@benchmarking.retailNumberOfComputers)%> *Optional</td>
+								    </tr> 
+								    
+								    <tr>
+								    	<td><%= label_tag(nil, "Retail number of workers:") %></td>
+								    	<td><%= text_field_tag(:retailNumberOfWorkers,@benchmarking.retailNumberOfWorkers)%> *Optional</td>
+								    </tr>     
+							    <% end %> <%# Building type input %>
+							</table>
+				            <table>
+					            <tr>
+						            <td>
+						                 <%= submit_tag "Benchmark", {:style => "width: 150px; height: 30px;" }%> 
+						            </td>
+					            </tr>
+				            </table>
+						</td>
+					</tr>
+				</table>		
+				<% end -%> <%# Form tag %>
+				</div>
+				
+				<%# The result section %>
+				<br/>
+				<div style="padding: 0px 10px 0px 10px; border: thin solid #000000;">
+				<% if @benchmarking.resultOutOfDate != nil and not @benchmarking.errors.any? %> <%# Benchmarking Results %>
+					<% if @benchmarking.resultOutOfDate %>
+						 <br />
+						 <div class="resultOutOfDate">The result may be out of date. Please redo the analysis. </div>
+					 <% end %>
+					 <p style="font-size: medium; font-weight: bold;">Your annual energy consumption is 
+					 	<span style="color: #0000FF"><%= number_with_precision(@benchmarking.annualSiteEnergy, :precision=> 2) %></span> kBtu/sf.</p>		
+					 
+					 <p style="font-size: medium; font-weight: bold;">The <span style="color: #0000FF">EnergyStar Score</span> is 
+					     <span style="color: #0000FF"><%= "%.2f" % @benchmarking.energyStarScore %></span>.</p>
+					<p style="font-size: medium; font-weight: bold;">The <span style="color: #0000FF">EnergyIQ</span> result based on California Commercial End-Use Survey (CEUS) is: </p>
+					
+					<div id="chart_div" style="width: 650px; height: 400px;"></div>
+					
+					<p style="width: 600px"><%=@benchmarking.energyIQDescription %></p>
+					
+					 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+					 <script type="text/javascript">
+					  google.load('visualization', '1', {packages: ['corechart']});
+					 </script>
+					 <script type="text/javascript">
+					  function drawChart() {					    
+						 var data = google.visualization.arrayToDataTable([
+						  ['EUI', 'Frequency', 'Accumulation', 'Your building'],
+						  <% accumulation = 0 %>
+						  <% for i in 0..@benchmarking.benchmark_freq_distributions.count-1 %>
+						  <% accumulation+= @benchmarking.benchmark_freq_distributions[i].energyIQFrequency %>
+						  [<%=@benchmarking.benchmark_freq_distributions[i].energyIQValue %>, <%=@benchmarking.benchmark_freq_distributions[i].energyIQFrequency %>,<%=accumulation%>, null],
+						  <% end %>
+						  
+						  [<%=@benchmarking.annualSiteEnergy %>,  null,    null,  <%=@benchmarking.energyIQScore %>]
+						]);  
+							
+						var formatter = new google.visualization.NumberFormat({
+					       fractionDigits: 2
+					    });
+					    
+						formatter.format(data,0)
+						formatter.format(data,1)
+						formatter.format(data,2)
+						formatter.format(data,3)
+						     
+					    // Create and draw the visualization.
+					    var ac = new google.visualization.ComboChart(document.getElementById('chart_div'));
+					    ac.draw(data, {
+					      title : 'Whole Building - Total Site Energy (kBTU/sf-yr)',
+					      vAxis: {title: "Buildings in Peer Group (%)"},
+					      hAxis: {title: "Site Energy (kBTU/sf-yr)"},
+					      seriesType: "bars",
+					      series: {1: {type: "line", pointSize: 10, lineWidth: 3},
+					      		   2: {type: "line", pointSize: 15, color: 'green'} }
+					    });        
+					  }
+					</script>
+					 <script>
+					// Create and populate the data tables
+					 drawChart()
+					 </script>
+					 
+				 <% else %> <%# Benchmarking Results %>
+					<p>No Benchmarking Results Yet!</p>
+				 <% end %> <%# Benchmarking Results %> 
+				</div>
+				
+			<% end %> <%# The Overall-Benchmarking %>
+		<% end %>
+	</div>
+</div>

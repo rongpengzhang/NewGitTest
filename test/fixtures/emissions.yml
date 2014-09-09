@@ -1,0 +1,9 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  electricityEmissionRate: 1.5
+  naturalGasEmissionRate: 1.5
+
+two:
+  electricityEmissionRate: 1.5
+  naturalGasEmissionRate: 1.5

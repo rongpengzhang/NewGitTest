@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  maxBudget: 1.5
+  maxPaybackYear: 1.5
+  priorityID: 1
+
+two:
+  maxBudget: 1.5
+  maxPaybackYear: 1.5
+  priorityID: 1

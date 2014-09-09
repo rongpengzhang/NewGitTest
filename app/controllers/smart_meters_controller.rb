@@ -1,0 +1,2 @@
+class SmartMetersController < ApplicationController 
+end

@@ -1,0 +1,390 @@
+<%= render "buildings/logo" %>
+<% startTime = Time.now() %>
+
+<div class="tabWidget">
+	 <ul class="tabBar">	 		
+      <li class="tabItem"> <%=link_to "Introduction", {:action => :index, :controller=> :buildings}, :style=>'text-decoration: none;' %></li>
+      <li class="tabItem"> <%=link_to "Common Inputs", {:action => :edit, :controller=> :basic_informations}, :style=>'text-decoration: none;'%></li>
+      <li class="tabItem"> <%=link_to "Benchmarking", {:action => :edit, :controller=> :benchmarkings}, :style=>'text-decoration: none;' %></li>
+      <li class="disabledTabItem">No- or Low-Cost Improvement</li>
+      <li class="currentTabItem">Preliminary Retrofit Analysis</li>
+      <li class="disabledTabItem">Detailed Retrofit Analysis</li>
+    </ul>    	
+	<div class="pageWidget">
+		<% if @preliminary_retrofit == nil %>
+			<p>Please go to Common Inputs page, and start a new analysis or continue your perviuos analysis.</p> 
+		<% else %> 	
+		    <% if not @preliminary_retrofit.basic_information.save or not @preliminary_retrofit.flat_utility_rate.save or not @preliminary_retrofit.emission.save or not @preliminary_retrofit.investment.save %>  <%# The Overall-Benchmarking  %>
+			<p>Please provide the Basic Informaiton, Energy Price, CO2 Emission Factor, and Investment Criteria in Common Inputs page before Benchmarking!</p>
+			<% else %> <%# The Overall-Benchmarking %>	
+				
+				<%# The input section %>				
+				<div style="padding: 0px 10px 0px 10px; border: thin solid #000000;">
+				<%= form_tag(:controller => :preliminary_retrofits, :action => :update, :method => :post, :id=> @preliminary_retrofit.id) do -%> <%# Form tag %>
+					<% if @preliminary_retrofit.errors.any? %>
+				    <div id="error_explanation">
+				      <h2><%= pluralize(@preliminary_retrofit.errors.count, "error") %> prohibited the 
+                          Upgrades update:</h2>				
+				      <ul>
+				      <% @preliminary_retrofit.errors.full_messages.each do |msg| %>
+				        <li><%= msg %></li>
+				      <% end %>
+				      </ul>
+				    </div>
+				  <% end %>		  
+						  
+				<table>
+					<tr>
+						<th align="left" style="border-width: 1px"><p style="font-size: large; font-weight: bold">Upgrades</p>	</td>
+					</tr>
+					<tr>
+						<td align="left" valign="top" style="border-width: 1px">						
+							<table>
+								<tr>
+									<th width="160">Category</th>
+									<th width="200">Default values</th>
+									<th width="450">Upgrade</th>
+								</tr>
+								
+								<% if @preliminary_retrofit.basic_information.buildingTypeID== 1 or @preliminary_retrofit.basic_information.buildingTypeID== 3 %>
+									
+									<tr>
+								    	<td><%= label_tag(nil, "Lighting-interior") %></td>
+								    	<td>TBD</td>
+								    	<% if @preliminary_retrofit.basic_information.yearBuilt > 2005 %>
+										<td><%= select_tag(:lightUpgradeID, options_for_select([["None",0], ["Lighting system upgrade to T5 meeting Title 24 2013",2]], @preliminary_retrofit.lightUpgradeID) , {:style => "width: 450px;" }) %> </td>
+										<% else %>
+										<td><%= select_tag(:lightUpgradeID, options_for_select([["None",0],["Lighting system upgrade to T8 meeting Title 24 2005",1], ["Upgrade to T5 meeting Title 24 2013",2]], @preliminary_retrofit.lightUpgradeID) , {:style => "width: 450px;" }) %> </td>
+										<% end %>
+								    </tr>  		
+								    
+									<tr>
+								    	<td><%= label_tag(nil, "Windows") %></td>
+								    	<td>TBD</td>
+								    	<% if @preliminary_retrofit.basic_information.yearBuilt > 2001 %>
+										<td><%= select_tag(:windowUpgradeID, options_for_select([["None",0], ["Windows upgrade meeting Title 24 2013",2]], @preliminary_retrofit.windowUpgradeID) , {:style => "width: 450px;" }) %> </td>
+										<% else %>
+										<td><%= select_tag(:windowUpgradeID, options_for_select([["None",0], ["Windows upgrade meeting Title 24 2001",1], ["Windows upgrade meeting Title 24 2013",2]], @preliminary_retrofit.windowUpgradeID) , {:style => "width: 450px;" }) %> </td>
+										<% end %>
+								    </tr>  	
+								    
+									<tr>
+								    	<td><%= label_tag(nil, "Cooling System") %></td>
+								    	<td>TBD</td>
+								    	<% if @preliminary_retrofit.basic_information.yearBuilt > 2001 %>
+										<td><%= select_tag(:coolingUpgradeID, options_for_select([["None",0], ["Cooling system efficiency upgrade to EER 11.5",2]], @preliminary_retrofit.coolingUpgradeID) , {:style => "width: 450px;" }) %> </td>
+										<% else %>
+										<td><%= select_tag(:coolingUpgradeID, options_for_select([["None",0], ["Cooling system efficiency upgrade to EER 10.5 meeting Title 24 2005",1],["Cooling system efficiency upgrade to EER 11.5",2]], @preliminary_retrofit.coolingUpgradeID) , {:style => "width: 450px;" }) %> </td>
+								    	<% end %>
+								    </tr>  	
+								    
+									<tr>
+								    	<td><%= label_tag(nil, "Heating System") %></td>
+								    	<td>TBD</td>
+										<td><%= select_tag(:heatingUpgradeID, options_for_select([["None",0], ["Heating system efficiency upgrade to 0.9 (AFUE 90)",1]], @preliminary_retrofit.heatingUpgradeID) , {:style => "width: 450px;" }) %> </td>
+								    </tr>  			
+								<% else %>	
+									<tr>
+								    	<td><%= label_tag(nil, "Lighting-interior") %></td>
+								    	<td>TBD</td>
+								    	<% if @preliminary_retrofit.basic_information.yearBuilt > 2008 %>
+										<td><%= select_tag(:lightUpgradeID, options_for_select([["None",0], ["Lighting system upgrade to T5 meeting Title 24 2013",2]], @preliminary_retrofit.lightUpgradeID) , {:style => "width: 450px;" }) %> </td>
+										<% else %>
+										<td><%= select_tag(:lightUpgradeID, options_for_select([["None",0],["Lighting system upgrade to T8 meeting Title 24 2005",1], ["Upgrade to T5 meeting Title 24 2013",2]], @preliminary_retrofit.lightUpgradeID) , {:style => "width: 450px;" }) %> </td>
+										<% end %>
+								    </tr>  		
+								    
+									<tr>
+								    	<td><%= label_tag(nil, "Windows") %></td>
+								    	<td>TBD</td>
+								    	<% if @preliminary_retrofit.basic_information.yearBuilt > 2001 %>
+										<td><%= select_tag(:windowUpgradeID, options_for_select([["None",0], ["Windows upgrade meeting Title 24 2013",2]], @preliminary_retrofit.windowUpgradeID) , {:style => "width: 450px;" }) %> </td>
+										<% else %>
+										<td><%= select_tag(:windowUpgradeID, options_for_select([["None",0], ["Windows upgrade meeting Title 24 2001",1], ["Windows upgrade meeting Title 24 2013",2]], @preliminary_retrofit.windowUpgradeID) , {:style => "width: 450px;" }) %> </td>
+										<% end %>
+								    </tr>  	
+								    
+									<tr>
+								    	<td><%= label_tag(nil, "Cooling System") %></td>
+								    	<td>TBD</td>
+								    	<% if @preliminary_retrofit.basic_information.yearBuilt > 2001 %>
+										<td><%= select_tag(:coolingUpgradeID, options_for_select([["None",0], ["Cooling system efficiency upgrade to EER 11.5",2]], @preliminary_retrofit.coolingUpgradeID) , {:style => "width: 450px;" }) %> </td>
+										<% else %>
+										<td><%= select_tag(:coolingUpgradeID, options_for_select([["None",0], ["Cooling system efficiency upgrade to EER 10.5 meeting Title 24 2005",1],["Cooling system efficiency upgrade to EER 11.5",2]], @preliminary_retrofit.coolingUpgradeID) , {:style => "width: 450px;" }) %> </td>
+								    	<% end %>
+								    </tr>  	
+								    
+									<tr>
+								    	<td><%= label_tag(nil, "Heating System") %></td>
+								    	<td>TBD</td>
+										<td><%= select_tag(:heatingUpgradeID, options_for_select([["None",0], ["Heating system efficiency upgrade to 0.9 (AFUE 90)",1]], @preliminary_retrofit.heatingUpgradeID) , {:style => "width: 450px;" }) %> </td>
+								    </tr>  
+											
+								<% end %>	
+								    	
+							</table>
+				            <table>
+					            <tr>
+						            <td>
+						                 <%= submit_tag "Preliminary Retrofit Analysis", {:style => "width: 250px; height: 30px;" }%> 
+						            </td>
+					            </tr>
+				            </table>
+						</td>
+					</tr>
+				</table>		
+				<% end -%> <%# Form tag %>
+				</div>
+			
+			    <%# The result section %>
+			    <br/>
+				<div style="padding: 0px 10px 0px 10px; border: thin solid #000000;">
+				<% if @preliminary_retrofit.resultOutOfDate != nil and not @preliminary_retrofit.errors.any? %>
+					 <% if @preliminary_retrofit.resultOutOfDate %>
+						 <br />
+						 <div class="resultOutOfDate">The result may be out of date. Please redo the analysis.</div>
+					 <% end %>
+					
+					<p style="font-size: medium; font-weight: bold;color: #0000FF;">Preliminary retrofit results:</p>					
+					<p style="font-weight: bold;">Annual site energy and CO2 emissions</p>					 
+					<div id="energy_div" 
+                        style="text-align: center; width: auto; margin: 0px auto 0px auto"></div>		
+								
+					<p style="font-weight: bold;">Annual economic analysis</p>					 
+					<div id="economic_div" 
+                        style="text-align: center; width: auto; margin: 0px auto 0px auto"></div>	
+								
+					<p style="font-weight: bold;">Annual energy and cost saving percentage</p>					 
+					<div id="economic_percentage_div"} 
+                        style="text-align: center; width: auto; margin: 0px auto 0px auto"></div>							 
+					
+					<% if @preliminary_retrofit.unsuggested_single_retrofit_results.count!= 0 %>
+						<p style="font-weight: bold;">Preformance of single measure</p>					 
+						<div id="unsuggested_single_div" 
+                        style="text-align: center; width: auto; margin: 0px auto 0px auto"></div>
+					<% end %>
+								
+					<p style="font-weight: bold;"> Description of measures</p>					 
+					<div id="measure_info_div" 
+                        style="text-align: center; width: auto; margin: 0px auto 0px auto"></div>	
+															
+					<br />
+					<p>Note: Measure ID(s) with (*) means that retrofit option does not meet the investment criteira.</p>			
+					 					 
+					 <%# Fucntion to draw table %>
+					 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+   					 <script type="text/javascript">
+						  google.load('visualization', '1', {packages: ['table']});
+						  function drawTable(data, div_id, startNo, sort) {
+							  var cssClassNames = {
+							    'headerRow': 'headerRow',
+							    'oddTableRow': 'oddTableRow',
+							    'tableRow' : 'tableRow', 
+							    'hoverTableRow':'hoverTableRow',
+							    'headerCell': 'headerCell',
+							    'tableCell': 'tableCell',
+							    'rowNumberCell': 'rowNumberCell' 
+							    };												
+							    var showRowNumber= true
+							    var sortColumn= -1
+								if (sort=='enable'){
+									showRowNumber= false
+									sortColumn= 0
+								}			
+							 	var options = {'sort': sort,'showRowNumber': showRowNumber, 'allowHtml': true, 'width': '100%','cssClassNames': cssClassNames,'firstRowNumber': startNo,'sortColumn': sortColumn};	
+			        			
+			        									
+						        var table = new google.visualization.Table(document.getElementById(div_id));							    
+						        table.draw(data, options);
+						        
+							  }
+					 </script>
+					  
+					  <% def formatResult(number) %>
+					    <% return number_with_delimiter('%.0f' % number, :delimiter=>',')  %>
+					  <% end %>	
+					  
+					  <% def formatPercentageResult(percentage) %>
+					    <% return number_to_percentage( percentage * 100, :precision=> 1)  %>
+					  <% end %>						
+					
+					 <%# Simulation Results %>
+					 <script>
+						// Create and populate the data tables
+						var data = new google.visualization.DataTable();
+				        data.addColumn('string', 'Measure ID(s)');
+				        data.addColumn('string', 'Electricity (kWh)');
+				        data.addColumn('string', 'Natural Gas (therm)');
+				        data.addColumn('string', 'Electricity Demand Charge ($)');
+				        data.addColumn('string', 'Energy Cost ($)');
+				        data.addColumn('string', 'CO2 Emission (lbs)');
+				        data.addRows([
+				           <% re= @preliminary_retrofit.baseline_result %>
+				          ['Baseline', '<%= formatResult re.annualElectricity %>','<%= formatResult re.annualNaturalGas %>','<%= formatResult re.annualElectricityDemandCost %>','<%= formatResult re.annualEnergyCost %>','<%= formatResult re.annualCO2Emission %>']			
+				          <%  @preliminary_retrofit.suggested_retrofit_results.each do |re| %>				       							           					       							           
+					           <%  if re.meetInvestmentCriteria %>					       							           
+					           <%  	  criteria ="" %>					       							           
+					           <%  else %>					       				       							           
+					           <%  	  criteria =" (*)" %>					   	       							           
+					           <%  end %>					       		       
+					           ,['ECM <%= re.measureIDs %><%= criteria %>', '<%= formatResult re.annualElectricity %>','<%= formatResult re.annualNaturalGas %>','<%= formatResult re.annualElectricityDemandCost %>','<%= formatResult re.annualEnergyCost %>','<%= formatResult re.annualCO2Emission %>']
+				          <% end %>
+				        ]);
+				        			        	
+						drawTable(data,'energy_div',0,'disable');
+					 </script>		
+					 
+					 <%# Retrofit Results %>
+					 <script>
+						// Create and populate the data tables
+						var data = new google.visualization.DataTable();
+				        data.addColumn('string', 'Measure ID(s)');
+				        data.addColumn('string', 'Energy Cost Saving ($)');
+				        data.addColumn('string', 'Energy Saving (kWh)');
+				        data.addColumn('string', 'Electricity Cost Saving ($)');
+				        data.addColumn('string', 'Electricity Saving (kWh)');
+				        data.addColumn('string', 'Natural Gas Cost Saving ($)');
+				        data.addColumn('string', 'Natural Gas Saving (therm)');
+				        data.addColumn('string', 'Investment Cost ($)');
+				        data.addColumn('string', 'Payback (Year)');
+				        data.addRows([
+				          <% firstRetrofit= true %>
+				             <% @preliminary_retrofit.suggested_retrofit_results.each do |re| %>	 	   
+			                 	<% if not firstRetrofit %>
+					           		,							           		
+					           <%  else %>
+					           		 <%  firstRetrofit= false	%>							           
+					           <%  end %>							       							           
+					           <%  if re.meetInvestmentCriteria %>					       							           
+					           <%  	  criteria ="" %>					       							           
+					           <%  else %>					       				       							           
+					           <%  	  criteria =" (*)" %>					   	       							           
+					           <%  end %>			 
+					           ['ECM <%= re.measureIDs %><%= criteria %>',
+					           '<%= formatResult(re.annualEnergyCostSaving) %>',
+					           '<%= formatResult(re.annualEnergySaving) %>',
+					           '<%= formatResult(re.annualElectricityCostSaving) %>',
+					           '<%= formatResult(re.annualElectricitySaving) %>',
+					           '<%= formatResult(re.annualNaturalGasCostSaving) %>',
+					           '<%= formatResult(re.annualNaturalGasSaving) %>',
+					           '<%= formatResult(re.investmentCost) %>',
+					           <% if re.paybackYear > 0 %>					           
+					           	'<%= '%.1f' % re.paybackYear %>']    
+					           <% else %>		           
+					           	'NA'] 
+					           <% end %>  		    
+				          <% end %>
+				        ]);
+						
+						 drawTable(data,'economic_div',1, 'disable')
+					 </script>			 
+				  	
+					 <%# Retrofit Results Percentage %>
+					 <script>
+						// Create and populate the data tables
+						var data = new google.visualization.DataTable();
+				        data.addColumn('string', 'Measure ID(s)');
+				        data.addColumn('string', 'Energy Cost Saving (%)');
+				        data.addColumn('string', 'Energy Saving (%)');
+				        data.addColumn('string', 'Electricity Usage/Cost Saving (%)');
+				        data.addColumn('string', 'Natural Gas Usage/Cost Saving %)');
+				        data.addRows([
+				          <% firstRetrofit= true %>
+				           <% @preliminary_retrofit.suggested_retrofit_results.each do |re| %>					            
+			                 	<% if not firstRetrofit %>
+			                 		,							           		
+					           <%  else %>
+					           		<%   firstRetrofit= false	%>
+					           <%  end %>									       							           
+					           <%  if re.meetInvestmentCriteria %>					       							           
+					           <%  	  criteria ="" %>					       							           
+					           <%  else %>					       				       							           
+					           <%  	  criteria =" (*)" %>					   	       							           
+					           <%  end %>					       		       
+					           ['ECM <%= re.measureIDs %><%= criteria %>', '<%= formatPercentageResult re.annualEnergyCostSavingPercentage %>','<%= formatPercentageResult(re.annualEnergySavingPercentage) %>','<%= formatPercentageResult(re.annualElectricitySavingPercentage) %>','<%= formatPercentageResult(re.annualNaturalGasSavingPercentage) %>']						    
+				          <% end %>
+				        ]);
+						
+						 drawTable(data,'economic_percentage_div',1, 'disable' )
+					 </script>	
+					 		
+					<%# Simulation Results for unsuggested single measure %>
+					<% if @preliminary_retrofit.unsuggested_single_retrofit_results.count!= 0 %>
+						 <script>
+							// Create and populate the data tables
+							var data = new google.visualization.DataTable();
+					        data.addColumn('string', 'Measure ID');
+					        data.addColumn('string', 'Electricity (kWh)');
+					        data.addColumn('string', 'Natural Gas (therm)');
+					        data.addColumn('string', 'Peak Elec Demand (kW)');
+					        data.addColumn('string', 'Energy Cost ($)');
+					        data.addColumn('string', 'CO2 Emission (lbs)');
+					        data.addColumn('string', 'Investment Cost ($)');
+					        data.addColumn('string', 'Payback (Year)');
+					        data.addRows([
+					          <% firstRetrofit= true %>
+					             <% @preliminary_retrofit.unsuggested_single_retrofit_results.each do |re| %>	 	   
+				                 	<% if not firstRetrofit %>
+						           		,							           		
+						           <%  else %>
+						           		 <%  firstRetrofit= false	%>							           
+						           <%  end %>							       							           
+						           <%  if re.meetInvestmentCriteria %>					       							           
+						           <%  	  criteria ="" %>					       							           
+						           <%  else %>					       				       							           
+						           <%  	  criteria =" (*)" %>					   	       							           
+						           <%  end %>					       		       
+						           ['ECM <%= re.measureIDs %><%= criteria %>', '<%= formatResult re.annualElectricity %>','<%= formatResult re.annualNaturalGas %>','<%= '%.2f' %  re.annualElectricityPeak %>','<%= formatResult re.annualEnergyCost %>','<%= formatResult re.annualCO2Emission %>','<%= formatResult(re.investmentCost) %>'						    
+						          				       							           
+						           <%  if re.paybackYear > 0%>					       							           
+						           		,'<%= '%.2f' % (re.paybackYear) %>']		       							           
+						           <%  else %>		       			       							           
+						           		,'NA']					           
+						           <%  end %>							           
+					          <% end %>
+					        ]);
+							
+							 drawTable(data,'unsuggested_single_div',1,'enable' )
+						 </script>			 
+					 <% end %>					 
+					 
+					 <%# Measure Information %>
+					 <script>
+						// Create and populate the data tables
+						var data = new google.visualization.DataTable();
+				        data.addColumn('string', 'Measure ID');
+				        data.addColumn('string', 'Category');
+				        data.addColumn('string', 'Component');
+				        data.addColumn('string', 'Description');
+				        data.addColumn('string', 'IEQ Impact');
+				        data.addColumn('string', 'Cost Unit');
+				        data.addColumn('string', 'Total cost per Unit');
+				        data.addRows([
+				           <% firstRetrofit= true %>
+				           <% @preliminary_retrofit.measureIDs.split(';').each do |m| %>					            
+			                 	<% if not firstRetrofit %>
+			                 		,							           		
+					           <%  else %>
+					           		<%   firstRetrofit= false	%>
+					           <%  end %>					           
+					           <% measure= CBES::Level2_Measure.select(m.to_i) %>
+					           [{v: '<%= measure.id/1000.0 %>', f: 'ECM <%= measure.id %>'},'<%=  measure.category %>','<%= measure.component %>','<%= measure.description %>','<%= measure.IEQPreliminaryRetrofit %>','<%= measure.costUnit %>','<%= '%.2f' % measure.totalCostPerUnit %>']				      
+					           
+				          <% end %>
+				        ]);
+						
+						drawTable(data,'measure_info_div',1 ,'enable')
+					 </script>	
+				  				        
+				 <% else %> <%# Preliminary Retrofit Results %>
+					<p>No Preliminary Retrofit Analysis Results Yet!</p>
+				 <% end %> <%# Preliminary Retrofit Results %> 
+				</div>
+			
+			<% end %>
+		<% end %>
+	</div>
+</div>
+
+<% endTime = Time.now() %>
+<% puts "Create Preliminary Edit HTML: " + '%.2f' % (endTime-startTime) + 's' %>

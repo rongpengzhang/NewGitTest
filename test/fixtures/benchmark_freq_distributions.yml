@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  benchmarking_id: 1
+  energyIQFrequency: 1.5
+  energyIQValue: 1.5
+  index: 1
+
+two:
+  benchmarking_id: 1
+  energyIQFrequency: 1.5
+  energyIQValue: 1.5
+  index: 1

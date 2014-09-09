@@ -1,0 +1,19 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  id: 1
+  name: MyString
+  description: MyString
+  buildingTypeID: 1
+  yearBuilt: 1
+  grossFloorArea: 1.5
+  retailFloorAreaPercentage: 1.5
+
+two:
+  id: 1
+  name: MyString
+  description: MyString
+  buildingTypeID: 1
+  yearBuilt: 1
+  grossFloorArea: 1.5
+  retailFloorAreaPercentage: 1.5
